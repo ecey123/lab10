@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, useWindowDimensions } from 'react-native';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, RADII, FONTS } from '../theme';
@@ -6,6 +6,9 @@ import { COLORS, SPACING, RADII, FONTS } from '../theme';
 export default function ProfileScreen() {
   const [theme, setTheme] = useState('light');
   const currentTheme = COLORS[theme];
+
+  const { width } = useWindowDimensions();
+  const isLargeScreen = width > 500;
 
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
@@ -23,10 +26,19 @@ export default function ProfileScreen() {
       </Pressable>
 
       {/* Profile Card */}
-      <View style={[styles.card, { backgroundColor: currentTheme.card }]}>
+      <View
+        style={[
+          styles.card,
+          {
+            backgroundColor: currentTheme.card,
+            padding: isLargeScreen ? SPACING.xl : SPACING.lg,
+            width: isLargeScreen ? '60%' : '85%',
+          },
+        ]}
+      >
         <Ionicons
           name="person-circle-outline"
-          size={80}
+          size={isLargeScreen ? 100 : 80}
           color={currentTheme.text}
         />
 
@@ -69,10 +81,8 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    width: '85%',
     borderRadius: RADII.md,
     alignItems: 'center',
-    padding: SPACING.lg,
 
     // iOS shadow
     shadowColor: '#000',
